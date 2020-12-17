@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-import { Game as GameLogic, PLAYER_1 } from "../common/Game";
+import { GameLogic } from "../../common/GameLogic";
 import { GameContext } from "./GameContext";
 import { SetGameContext } from "./SetGameContext";
 import { SocketContext } from "./SocketContext";

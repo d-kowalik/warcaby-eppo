@@ -25,7 +25,7 @@ const generateCheckers = (ourColor) => {
   return ret;
 };
 
-export class Game {
+export class GameLogic {
   constructor(ourColor) {
     this.currentPlayer = PLAYER_2;
     this.ourColor = ourColor;
@@ -102,7 +102,7 @@ export class Game {
     const possibleMoves = this.getPossibleMoves(xFrom, yFrom);
     console.log(possibleMoves, this.currentPlayer);
 
-    const newGame = new Game(this.ourColor);
+    const newGame = new GameLogic(this.ourColor);
     newGame.currentPlayer = invert(this.currentPlayer);
     newGame.fields = this.fields.map((column) => [...column]);
 
