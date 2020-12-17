@@ -3,14 +3,27 @@
   "scripts": {
     "start": "parcel build frontend/index.html && node backend/server.js",
     "watch-frontend": "parcel watch frontend/index.html",
-    "watch-backend": "node-dev backend/server.js"
+    "watch-backend": "node-dev backend/server.js",
+    "lint": "eslint --max-warnings 0 {backend,frontend}/**/*.{js,jsx}",
+    "format": "prettier --write {backend,frontend}/**/*.{html,js,jsx,css}"
   },
   "dependencies": {
     "express": "^4.17.1",
     "node-dev": "^6.2.0",
     "parcel-bundler": "^1.12.4",
+    "prettier": "^2.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "socket.io": "^3.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.15.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.0",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0"
   }
 }

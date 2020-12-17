@@ -1,6 +1,11 @@
 import React from "react";
 import ReactDom from "react-dom";
 
-const App = () => <h1>Hello!</h1>;
+import { Board } from "./Board";
+import "./index.css";
+
+const App = () => {
+  return <Board />;
+};
 
 ReactDom.render(<App />, document.getElementById("app"));
