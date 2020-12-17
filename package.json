@@ -3,7 +3,7 @@
   "scripts": {
     "start": "parcel build frontend/index.html && node backend/server.js",
     "watch-frontend": "parcel watch frontend/index.html",
-    "watch-backend": "node-dev backend/server.js",
+    "watch-backend": "node-dev --no-notify backend/server.js",
     "lint": "eslint --max-warnings 0 {backend,frontend}/**/*.{js,jsx}",
     "format": "prettier --write {backend,frontend}/**/*.{html,js,jsx,css}"
   },
