@@ -1,37 +1,35 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+import React, { useState, useEffect, useContext } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 
 import { GameLogic } from "../../common/GameLogic";
 import { GameContext } from "./GameContext";
 import { SetGameContext } from "./SetGameContext";
-import { SocketContext } from "./SocketContext";
+import { SocketContext } from "../SocketContext";
 import { Board } from "./Board";
+import { Loader } from "../Loader/Loader";
 
 import "./Game.css";
 
 export const Game = () => {
+  const socket = useContext(SocketContext);
+  const location = useLocation();
+  const history = useHistory();
   const [game, setGame] = useState(null);
-  const [socket, setSocket] = useState(null);
+
+  if (!location.state || !location.state.id) {
+    history.push("/");
+    return null;
+  }
 
   useEffect(() => {
-    const socket = io();
-    socket.on("connect", () => {
-      socket.emit("hello", "ready");
-      console.log(socket.id);
-      setSocket(socket);
-    });
-
+    socket.emit("join game", location.state.id);
     return () => {
-      setSocket(null);
-      socket.disconnect();
+      socket.emit("leave game");
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (!socket) return;
-    socket.removeAllListeners("color");
-    socket.removeAllListeners("tryMove");
-
     socket.on("color", (color) => {
       console.log("Creating game for player", socket.id, "color:", color);
       setGame(new GameLogic(color));
@@ -41,18 +39,21 @@ export const Game = () => {
       console.log(data.map((x) => 7 - x));
       setGame(game.tryMove(...data.map((x) => 7 - x)));
     });
+
+    return () => {
+      socket.removeAllListeners("color");
+      socket.removeAllListeners("tryMove");
+    };
   }, [socket, game, setGame]);
 
-  if (!game) return <p>Waiting for color...</p>;
+  if (!game) return <Loader text="Waiting for other players..." />;
 
   return (
     <GameContext.Provider value={game}>
       <SetGameContext.Provider value={setGame}>
-        <SocketContext.Provider value={socket}>
-          <div className="game">
-            <Board />
-          </div>
-        </SocketContext.Provider>
+        <div className="game">
+          <Board />
+        </div>
       </SetGameContext.Provider>
     </GameContext.Provider>
   );

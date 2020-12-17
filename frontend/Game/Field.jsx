@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { Checker } from "./Checker";
 import { GameContext } from "./GameContext";
 import { SetGameContext } from "./SetGameContext";
-import { SocketContext } from "./SocketContext";
+import { SocketContext } from "../SocketContext";
 import { EMPTY } from "../../common/GameLogic";
 
 import "./Field.css";
