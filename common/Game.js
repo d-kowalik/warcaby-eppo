@@ -90,6 +90,8 @@ export class Game {
   }
 
   tryMove(xFrom, yFrom, xTo, yTo) {
+    if (this.getField(xFrom, yFrom) != this.getCurrentPlayer()) return this;
+
     const possibleMoves = this.getPossibleMoves(xFrom, yFrom);
 
     const newGame = new Game(this.ourColor);
@@ -108,6 +110,6 @@ export class Game {
       return newGame;
     }
 
-    return false;
+    return this;
   }
 }
