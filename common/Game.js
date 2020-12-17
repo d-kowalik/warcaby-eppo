@@ -21,6 +21,10 @@ const generateCheckers = (ourColor) => {
       }
     }
   }
+
+  ret[5][4] = PLAYER_1;
+  ret[4][1] = EMPTY;
+
   return ret;
 };
 
@@ -50,18 +54,19 @@ export class Game {
   getPossibleKills(x, y) {
     if (x < 0 || y < 0 || x >= 8 || y >= 8) return [];
     let possibleKills = [];
+    const direction = this.getCurrentPlayer() == PLAYER_1 ? 1 : -1;
     let indices = [
-      [1, 1],
-      [1, -1],
-      // [-1, 1],
-      // [-1, -1],
+      [1, direction],
+      [-1, direction],
     ];
     for (let [dx, dy] of indices) {
       if (this.getField(x + dx, y + dy) == this.getEnemyPlayer()) {
-        possibleKills.push([x + dx * 2, y + dy * 2]);
-        // possibleKills = possibleKills.concat(
-        //   this.getPossibleKills(x + dx * 2, y + dy * 2)
-        // );
+        if (this.getField(x + dx * 2, y + dy * 2) == EMPTY) {
+          possibleKills.push([x + dx * 2, y + dy * 2]);
+          possibleKills = possibleKills.concat(
+            this.getPossibleKills(x + dx * 2, y + dy * 2)
+          );
+        }
       }
     }
 
@@ -69,8 +74,7 @@ export class Game {
   }
 
   getPossibleMoves(x, y) {
-    // let possibleMoves = this.getPossibleKills(x, y);
-    const possibleMoves = [];
+    let possibleMoves = this.getPossibleKills(x, y);
     const direction = this.getCurrentPlayer() == PLAYER_1 ? 1 : -1;
     if (this.getField(x + 1, y + direction) == EMPTY)
       possibleMoves.push([x + 1, y + direction]);

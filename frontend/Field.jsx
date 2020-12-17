@@ -30,8 +30,6 @@ export const Field = ({ x, y, state, hover, setHover }) => {
     >
       {state != EMPTY ? (
         <Checker
-          x={x}
-          y={y}
           state={state}
           disabled={state != game.getCurrentPlayer()}
           onMouseEnter={onMouseEnter}
