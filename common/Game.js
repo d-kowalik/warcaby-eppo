@@ -13,11 +13,11 @@ const generateCheckers = (ourColor) => {
     ret[x] = [];
     for (let y = 0; y < 8; y++) {
       if (y < 3) {
-        ret[x][y] = (x + y) % 2 == 0 ? EMPTY : ourColor;
+        ret[x][y] = (x + y) % 2 == 0 ? EMPTY : invert(ourColor);
       } else if (y >= 3 && y < 5) {
         ret[x][y] = EMPTY;
       } else {
-        ret[x][y] = (x + y) % 2 == 0 ? EMPTY : invert(ourColor);
+        ret[x][y] = (x + y) % 2 == 0 ? EMPTY : ourColor;
       }
     }
   }
@@ -45,6 +45,10 @@ export class Game {
     return this.currentPlayer;
   }
 
+  getOurColor() {
+    return this.ourColor;
+  }
+
   getEnemyPlayer() {
     return invert(this.getCurrentPlayer());
   }
@@ -54,7 +58,7 @@ export class Game {
 
     let possibleKills = [];
 
-    const direction = this.getCurrentPlayer() == PLAYER_1 ? 1 : -1;
+    const direction = this.getCurrentPlayer() == this.getOurColor() ? -1 : 1;
     let indices = [
       [1, direction],
       [-1, direction],
@@ -80,7 +84,7 @@ export class Game {
   getPossibleMoves(x, y) {
     let possibleMoves = this.getPossibleKills(x, y, []);
 
-    const direction = this.getCurrentPlayer() == PLAYER_1 ? 1 : -1;
+    const direction = this.getCurrentPlayer() == this.getOurColor() ? -1 : 1;
     if (this.getField(x + 1, y + direction) == EMPTY)
       possibleMoves.push([x + 1, y + direction, []]);
     if (this.getField(x - 1, y + direction) == EMPTY)
@@ -90,9 +94,13 @@ export class Game {
   }
 
   tryMove(xFrom, yFrom, xTo, yTo) {
-    if (this.getField(xFrom, yFrom) != this.getCurrentPlayer()) return this;
+    if (this.getField(xFrom, yFrom) != this.getCurrentPlayer()) {
+      console.log("dupa");
+      return this;
+    }
 
     const possibleMoves = this.getPossibleMoves(xFrom, yFrom);
+    console.log(possibleMoves, this.currentPlayer);
 
     const newGame = new Game(this.ourColor);
     newGame.currentPlayer = invert(this.currentPlayer);

@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { Checker } from "./Checker";
 import { GameContext } from "./GameContext";
 import { SetGameContext } from "./SetGameContext";
+import { SocketContext } from "./SocketContext";
 import { EMPTY } from "../common/Game";
 
 import "./Field.css";
@@ -22,6 +23,7 @@ export const Field = ({
 }) => {
   const game = useContext(GameContext);
   const setGame = useContext(SetGameContext);
+  const socket = useContext(SocketContext);
 
   const onMouseEnter = () => {
     setHovered([x, y]);
@@ -53,6 +55,7 @@ export const Field = ({
   const onBackgroundClick = () => {
     if (!isSelectedPossible) return;
     setGame(game.tryMove(selected[0], selected[1], x, y));
+    socket.emit("tryMove", [selected[0], selected[1], x, y]);
     setSelected(null);
     setSelectedPossible([]);
   };
@@ -73,7 +76,10 @@ export const Field = ({
       {state != EMPTY ? (
         <Checker
           state={state}
-          disabled={state != game.getCurrentPlayer()}
+          disabled={
+            state != game.getCurrentPlayer() ||
+            game.getCurrentPlayer() !== game.getOurColor()
+          }
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           onClick={onClick}
