@@ -5,11 +5,11 @@ import "./Login.css";
 export const Login = ({ onSubmit }) => {
   const [nick, setNick] = useState("");
 
-  const submit = () => {
+  const submit = (e) => {
+    e.preventDefault();
     if (nick.length > 0) {
       onSubmit(nick);
     }
-    return false;
   };
 
   return (
