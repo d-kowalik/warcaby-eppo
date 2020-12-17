@@ -2,6 +2,7 @@
   overflow: hidden;
   position: relative;
   padding: 10%;
+  transition: background-color 0.1s;
 }
 
 .even {
