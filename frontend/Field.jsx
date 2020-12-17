@@ -6,22 +6,54 @@ import { EMPTY } from "../common/Game";
 
 import "./Field.css";
 
-export const Field = ({ x, y, state, hover, setHover }) => {
+export const Field = ({
+  x,
+  y,
+  state,
+  hovered,
+  setHovered,
+  hoveredPossible,
+  setHoveredPossible,
+  selected,
+  setSelected,
+  selectedPossible,
+  setSelectedPossible,
+}) => {
   const game = useContext(GameContext);
 
   const onMouseEnter = () => {
-    setHover([[x, y]].concat(game.getPossibleMoves(x, y)));
+    setHovered([x, y]);
+    setHoveredPossible(game.getPossibleMoves(x, y));
   };
 
   const onMouseLeave = () => {
-    setHover([]);
+    setHovered(null);
+    setHoveredPossible([]);
   };
 
-  const isHovered = hover.filter(([hx, hy]) => hx == x && hy == y).length > 0;
+  const onClick = () => {
+    if (selected && selected[0] == x && selected[1] == y) {
+      setSelected(null);
+      setSelectedPossible([]);
+    } else {
+      setSelected([x, y]);
+      setSelectedPossible(game.getPossibleMoves(x, y));
+    }
+  };
+
+  const isHovered = hovered && hovered[0] == x && hovered[1] == y;
+  const isSelected = selected && selected[0] == x && selected[1] == y;
+  const isHoveredPossible =
+    hoveredPossible.filter(([hx, hy]) => hx == x && hy == y).length > 0;
+  const isSelectedPossible =
+    selectedPossible.filter(([hx, hy]) => hx == x && hy == y).length > 0;
 
   const classes = ["field"];
   classes.push((x + y) % 2 === 0 ? "even" : "odd");
   classes.push(isHovered ? "hovered" : "");
+  classes.push(isHoveredPossible ? "hovered-possible" : "");
+  classes.push(isSelected ? "selected" : "");
+  classes.push(isSelectedPossible ? "selected-possible" : "");
 
   return (
     <div
@@ -34,6 +66,7 @@ export const Field = ({ x, y, state, hover, setHover }) => {
           disabled={state != game.getCurrentPlayer()}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
+          onClick={onClick}
         />
       ) : null}
     </div>

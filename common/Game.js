@@ -51,20 +51,26 @@ export class Game {
     return invert(this.getCurrentPlayer());
   }
 
-  getPossibleKills(x, y) {
+  getPossibleKills(x, y, killsSoFar) {
     if (x < 0 || y < 0 || x >= 8 || y >= 8) return [];
+
     let possibleKills = [];
+
     const direction = this.getCurrentPlayer() == PLAYER_1 ? 1 : -1;
     let indices = [
       [1, direction],
       [-1, direction],
     ];
+
     for (let [dx, dy] of indices) {
       if (this.getField(x + dx, y + dy) == this.getEnemyPlayer()) {
         if (this.getField(x + dx * 2, y + dy * 2) == EMPTY) {
-          possibleKills.push([x + dx * 2, y + dy * 2]);
+          const kills = [...killsSoFar, [x + dx, y + dy]];
+
+          possibleKills.push([x + dx * 2, y + dy * 2, kills]);
+
           possibleKills = possibleKills.concat(
-            this.getPossibleKills(x + dx * 2, y + dy * 2)
+            this.getPossibleKills(x + dx * 2, y + dy * 2, kills)
           );
         }
       }
@@ -74,14 +80,32 @@ export class Game {
   }
 
   getPossibleMoves(x, y) {
-    let possibleMoves = this.getPossibleKills(x, y);
+    let possibleMoves = this.getPossibleKills(x, y, []);
+
     const direction = this.getCurrentPlayer() == PLAYER_1 ? 1 : -1;
     if (this.getField(x + 1, y + direction) == EMPTY)
-      possibleMoves.push([x + 1, y + direction]);
+      possibleMoves.push([x + 1, y + direction, []]);
     if (this.getField(x - 1, y + direction) == EMPTY)
-      possibleMoves.push([x - 1, y + direction]);
+      possibleMoves.push([x - 1, y + direction, []]);
+
     return possibleMoves.filter(([mx, my]) => !(mx == x && my == y));
   }
 
-  tryMove(xFrom, yFrom, xTo, yTo) {}
+  tryMove(xFrom, yFrom, xTo, yTo) {
+    const possibleMoves = getPossibleMoves(xFrom, yFrom);
+
+    for (let [x, y, kills] of possibleMoves) {
+      if (x != xTo || y != yTo) continue;
+
+      for (const [ex, ey] of kills) {
+        this.fields[ex][ey] = EMPTY;
+      }
+      this.fields[xFrom][yFrom] = EMPTY;
+      this.fields[x][y] = this.getCurrentPlayer();
+
+      return true;
+    }
+
+    return false;
+  }
 }

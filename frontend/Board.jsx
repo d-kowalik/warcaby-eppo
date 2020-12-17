@@ -7,7 +7,10 @@ import "./Board.css";
 
 export const Board = () => {
   const game = useContext(GameContext);
-  const [hover, setHover] = useState([]);
+  const [hovered, setHovered] = useState(null);
+  const [hoveredPossible, setHoveredPossible] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [selectedPossible, setSelectedPossible] = useState([]);
 
   return (
     <div className="board">
@@ -19,8 +22,14 @@ export const Board = () => {
               y={y}
               key={`${x}_${y}`}
               state={game.getField(x, y)}
-              hover={hover}
-              setHover={setHover}
+              hovered={hovered}
+              setHovered={setHovered}
+              hoveredPossible={hoveredPossible}
+              setHoveredPossible={setHoveredPossible}
+              selected={selected}
+              setSelected={setSelected}
+              selectedPossible={selectedPossible}
+              setSelectedPossible={setSelectedPossible}
             />
           );
         });
