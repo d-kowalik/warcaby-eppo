@@ -3,4 +3,11 @@
   justify-content: center;
   align-items: center;
   padding: 75px;
+  background: #37474f;
+  height: 100vh;
+}
+
+.game > * {
+  width: 100vmin;
+  max-width: 600px;
 }
