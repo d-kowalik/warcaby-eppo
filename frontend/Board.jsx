@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+
 import { Game } from "../common/Game";
 import { Field } from "./Field";
+
+import "./Board.css";
 
 export const Board = (props) => {
   const [game, setGame] = useState(new Game());

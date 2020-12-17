@@ -1,0 +1,13 @@
+.field {
+  overflow: hidden;
+  position: relative;
+  padding: 10%;
+}
+
+.even {
+  background: brown;
+}
+
+.odd {
+  background: gray;
+}

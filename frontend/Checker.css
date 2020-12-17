@@ -1,0 +1,25 @@
+.checker {
+  content: "";
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 100%;
+}
+
+.PLAYER_1 {
+  background: black;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.PLAYER_1:hover {
+  cursor: pointer;
+}
+
+.PLAYER_2 {
+  background: white;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.PLAYER_2:hover {
+  cursor: pointer;
+}
