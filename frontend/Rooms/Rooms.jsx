@@ -10,10 +10,7 @@ export const Rooms = ({ nick }) => {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    socket.emit("list rooms", (newRooms) => {
-      console.log("Checked for existing rooms!");
-      setRooms(newRooms);
-    });
+    socket.emit("list rooms");
   }, []);
 
   useEffect(() => {
@@ -25,7 +22,7 @@ export const Rooms = ({ nick }) => {
     return () => {
       socket.removeAllListeners("room discovery");
     };
-  }, [socket]);
+  }, [socket, rooms, setRooms]);
 
   const joinRoom = (id) => {
     history.push({

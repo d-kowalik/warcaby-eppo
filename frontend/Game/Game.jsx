@@ -24,7 +24,8 @@ export const Game = () => {
   useEffect(() => {
     socket.emit("join game", location.state.id);
     return () => {
-      socket.emit("leave game");
+      socket.disconnect();
+      socket.connect();
     };
   }, [socket]);
 

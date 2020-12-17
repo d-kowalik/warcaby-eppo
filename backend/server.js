@@ -2,7 +2,6 @@ const express = require("express");
 const socket = require("socket.io");
 const path = require("path");
 const http = require("http");
-const { send } = require("process");
 
 const app = express();
 const server = http.createServer(app);
@@ -12,13 +11,6 @@ app.use("/", express.static(path.join(__dirname, "../dist")));
 
 const rooms = new Map();
 const playerPositions = new Map();
-const createRoom = () => {
-  rooms.set("test", {
-    name: "Tester room",
-    players: [],
-  });
-};
-createRoom();
 
 const sendRoom = (socket, roomId) => {
   const room = rooms.get(roomId);
@@ -71,24 +63,13 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("leave game", () => {
-    console.log("client left game: " + socket.id);
-    const playerPosition = playerPositions.get(socket.id);
-    const playerRoom = rooms.get(playerPosition);
-    if (playerRoom) {
-      playerRoom.players.forEach((p) => p.emit("game won"));
-      console.log("deleting room: " + playerPosition);
-      rooms.delete(playerPosition);
-    }
-  });
-
   socket.on("disconnect", () => {
     console.log("client disconnected: " + socket.id);
     const playerPosition = playerPositions.get(socket.id);
     const playerRoom = rooms.get(playerPosition);
     if (playerRoom) {
       playerRoom.players.forEach((p) => p.emit("game won"));
-      console.log("deleting room: " + playerPosition);
+      console.log(`deleting room ${playerRoom.name} ${playerPosition}`);
       rooms.delete(playerPosition);
     }
     playerPositions.delete(socket.id);
