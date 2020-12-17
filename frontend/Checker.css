@@ -23,3 +23,7 @@
 .PLAYER_2:hover {
   cursor: pointer;
 }
+
+.disabled:hover {
+  cursor: unset;
+}

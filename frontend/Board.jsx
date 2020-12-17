@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
-import { Game } from "../common/Game";
+import { GameContext } from "./GameContext";
 import { Field } from "./Field";
 
 import "./Board.css";
 
-export const Board = (props) => {
-  const [game, setGame] = useState(new Game());
-  const fields = game.getFields();
+export const Board = () => {
+  const game = useContext(GameContext);
+  const [hover, setHover] = useState([]);
+
   return (
     <div className="board">
-      {fields.map((column, x) => {
+      {game.getFields().map((column, x) => {
         return column.map((row, y) => {
           return (
-            <Field x={x} y={y} key={`${x}_${y}`} state={game.getField(x, y)} />
+            <Field
+              x={x}
+              y={y}
+              key={`${x}_${y}`}
+              state={game.getField(x, y)}
+              hover={hover}
+              setHover={setHover}
+            />
           );
         });
       })}
