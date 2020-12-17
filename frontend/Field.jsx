@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 
 import { Checker } from "./Checker";
 import { GameContext } from "./GameContext";
+import { SetGameContext } from "./SetGameContext";
 import { EMPTY } from "../common/Game";
 
 import "./Field.css";
@@ -20,6 +21,7 @@ export const Field = ({
   setSelectedPossible,
 }) => {
   const game = useContext(GameContext);
+  const setGame = useContext(SetGameContext);
 
   const onMouseEnter = () => {
     setHovered([x, y]);
@@ -48,6 +50,13 @@ export const Field = ({
   const isSelectedPossible =
     selectedPossible.filter(([hx, hy]) => hx == x && hy == y).length > 0;
 
+  const onBackgroundClick = () => {
+    if (!isSelectedPossible) return;
+    setGame(game.tryMove(selected[0], selected[1], x, y));
+    setSelected(null);
+    setSelectedPossible([]);
+  };
+
   const classes = ["field"];
   classes.push((x + y) % 2 === 0 ? "even" : "odd");
   classes.push(isHovered ? "hovered" : "");
@@ -59,6 +68,7 @@ export const Field = ({
     <div
       className={classes.join(" ")}
       style={{ gridColumnStart: x + 1, gridRowStart: y + 1 }}
+      onClick={onBackgroundClick}
     >
       {state != EMPTY ? (
         <Checker

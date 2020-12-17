@@ -22,15 +22,13 @@ const generateCheckers = (ourColor) => {
     }
   }
 
-  ret[5][4] = PLAYER_1;
-  ret[4][1] = EMPTY;
-
   return ret;
 };
 
 export class Game {
   constructor(ourColor) {
     this.currentPlayer = PLAYER_2;
+    this.ourColor = ourColor;
     this.fields = generateCheckers(ourColor);
   }
 
@@ -92,18 +90,22 @@ export class Game {
   }
 
   tryMove(xFrom, yFrom, xTo, yTo) {
-    const possibleMoves = getPossibleMoves(xFrom, yFrom);
+    const possibleMoves = this.getPossibleMoves(xFrom, yFrom);
+
+    const newGame = new Game(this.ourColor);
+    newGame.currentPlayer = invert(this.currentPlayer);
+    newGame.fields = this.fields.map((column) => [...column]);
 
     for (let [x, y, kills] of possibleMoves) {
       if (x != xTo || y != yTo) continue;
 
       for (const [ex, ey] of kills) {
-        this.fields[ex][ey] = EMPTY;
+        newGame.fields[ex][ey] = EMPTY;
       }
-      this.fields[xFrom][yFrom] = EMPTY;
-      this.fields[x][y] = this.getCurrentPlayer();
+      newGame.fields[xFrom][yFrom] = EMPTY;
+      newGame.fields[x][y] = this.getCurrentPlayer();
 
-      return true;
+      return newGame;
     }
 
     return false;

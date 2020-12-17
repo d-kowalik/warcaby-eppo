@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { Game as GameLogic, PLAYER_1 } from "../common/Game";
 import { GameContext } from "./GameContext";
+import { SetGameContext } from "./SetGameContext";
 import { Board } from "./Board";
 
 import "./Game.css";
@@ -11,9 +12,11 @@ export const Game = () => {
 
   return (
     <GameContext.Provider value={game}>
-      <div className="game">
-        <Board />
-      </div>
+      <SetGameContext.Provider value={setGame}>
+        <div className="game">
+          <Board />
+        </div>
+      </SetGameContext.Provider>
     </GameContext.Provider>
   );
 };
