@@ -144,9 +144,6 @@ export class GameLogic {
     const ourCheckers = this.getCheckersPositionsFor(ourColor);
     const enemyCheckers = this.getCheckersPositionsFor(enemyColor);
 
-    console.log("our", ourCheckers);
-    console.log("ene", enemyCheckers);
-
     const ourLoss = !ourCheckers.some(
       ([x, y]) => this.getPossibleMovesFor(x, y, ourColor).length > 0
     );
