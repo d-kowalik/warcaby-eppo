@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
       name,
       players: [],
     });
-    socket.emit("room available", socket.id, name);
+    players.forEach((player) => player.emit("room available", socket.id, name));
   });
 
   socket.on("list rooms", () => {
