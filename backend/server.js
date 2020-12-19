@@ -14,20 +14,12 @@ const playerPositions = new Map();
 const players = new Map();
 const playerNames = new Map();
 
-const sendRoom = (socket, roomId) => {
-  const room = rooms.get(roomId);
-  if (!room) return;
-  if (room.players.length < 2) {
-    socket.emit("room available", roomId, room.name);
-  }
-};
-
 io.on("connection", (socket) => {
-  console.log("client connected: " + socket.id);
+  console.log(`client connected: ${socket.id}`);
   players.set(socket.id, socket);
 
   socket.on("set nick", (nick) => {
-    console.log("set nick: " + nick);
+    console.log(`set nick: ${nick}`);
     playerNames.set(socket.id, nick);
     players.forEach((player) =>
       player.emit("player connected", socket.id, nick)
@@ -81,13 +73,12 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("create room", (nick) => {
+  socket.on("create room", (name) => {
     rooms.set(socket.id, {
-      name: `${nick}'s room`,
+      name,
       players: [],
-      finished: false,
     });
-    sendRoom(io, socket.id);
+    socket.emit("room available", socket.id, name);
   });
 
   socket.on("list rooms", () => {
@@ -103,7 +94,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("client disconnected: " + socket.id);
+    console.log(`client disconnected: ${socket.id}`);
     const playerPosition = playerPositions.get(socket.id);
     const playerRoom = rooms.get(playerPosition);
     if (playerRoom) {
