@@ -124,13 +124,13 @@ io.on("connection", (socket) => {
     playerPositions.delete(socket.id);
   });
 
-  socket.on("tryMove", (data) => {
+  socket.on("try move", (data) => {
     const playerPosition = playerPositions.get(socket.id);
     const playerRoom = rooms.get(playerPosition);
     if (playerRoom) {
       playerRoom.players
         .filter((p) => p.id != socket.id)
-        .forEach((p) => p.emit("tryMove", data));
+        .forEach((p) => p.emit("try move", data));
     }
   });
 });

@@ -55,7 +55,7 @@ export const Field = ({
   const onBackgroundClick = () => {
     if (!isSelectedPossible) return;
     setGame(game.tryMove(selected[0], selected[1], x, y));
-    socket.emit("tryMove", [selected[0], selected[1], x, y]);
+    socket.emit("try move", [selected[0], selected[1], x, y]);
     setSelected(null);
     setSelectedPossible([]);
   };

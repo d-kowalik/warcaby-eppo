@@ -41,7 +41,7 @@ export const Game = () => {
       setEnemyName(enemyName);
     });
 
-    socket.on("tryMove", (data) => {
+    socket.on("try move", (data) => {
       const newGame = game.tryMove(...data.map((x) => 7 - x));
       setGame(newGame);
       const winner = newGame.checkWinCondition();
@@ -64,7 +64,7 @@ export const Game = () => {
 
     return () => {
       socket.removeAllListeners("game ready");
-      socket.removeAllListeners("tryMove");
+      socket.removeAllListeners("try move");
       socket.removeAllListeners("game won");
     };
   }, [socket, game, setGame, setEnemyName]);
