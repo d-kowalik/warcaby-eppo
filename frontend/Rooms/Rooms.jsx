@@ -47,12 +47,15 @@ export const Rooms = ({ nick }) => {
 
   return (
     <div className="rooms">
-      <button onClick={createRoom}>Create room</button>
+      <button className="create-room-button" onClick={createRoom}>
+        Create room
+      </button>
+      <h1>Existing rooms</h1>
       {rooms.map(({ id, name }) => {
         return (
-          <div className="room" key={id} onClick={() => joinRoom(id)}>
+          <button className="room" key={id} onClick={() => joinRoom(id)}>
             {name}
-          </div>
+          </button>
         );
       })}
     </div>
