@@ -95,12 +95,10 @@ export class GameLogic {
 
   tryMove(xFrom, yFrom, xTo, yTo) {
     if (this.getField(xFrom, yFrom) != this.getCurrentPlayer()) {
-      console.log("dupa");
       return this;
     }
 
     const possibleMoves = this.getPossibleMoves(xFrom, yFrom);
-    console.log(possibleMoves, this.currentPlayer);
 
     const newGame = new GameLogic(this.ourColor);
     newGame.currentPlayer = invert(this.currentPlayer);

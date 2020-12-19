@@ -32,12 +32,10 @@ export const Game = () => {
   useEffect(() => {
     if (!socket) return;
     socket.on("color", (color) => {
-      console.log("Creating game for player", socket.id, "color:", color);
       setGame(new GameLogic(color));
     });
 
     socket.on("tryMove", (data) => {
-      console.log(data.map((x) => 7 - x));
       setGame(game.tryMove(...data.map((x) => 7 - x)));
     });
 

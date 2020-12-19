@@ -11,11 +11,10 @@ export const Rooms = ({ nick }) => {
 
   useEffect(() => {
     socket.emit("list rooms");
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     socket.on("room available", (id, name) => {
-      console.log("room created!");
       setRooms([...rooms, { id, name }]);
     });
 
@@ -23,9 +22,14 @@ export const Rooms = ({ nick }) => {
       setRooms(rooms.filter((room) => room.id != id));
     });
 
+    socket.on("room list", (rooms) => {
+      setRooms(rooms);
+    });
+
     return () => {
       socket.removeAllListeners("room available");
       socket.removeAllListeners("room full");
+      socket.removeAllListeners("room list");
     };
   }, [socket, rooms, setRooms]);
 

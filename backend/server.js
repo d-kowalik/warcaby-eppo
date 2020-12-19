@@ -11,6 +11,8 @@ app.use("/", express.static(path.join(__dirname, "../dist")));
 
 const rooms = new Map();
 const playerPositions = new Map();
+const players = new Map();
+const playerNames = new Map();
 
 const sendRoom = (socket, roomId) => {
   const room = rooms.get(roomId);
@@ -22,6 +24,29 @@ const sendRoom = (socket, roomId) => {
 
 io.on("connection", (socket) => {
   console.log("client connected: " + socket.id);
+  players.set(socket.id, socket);
+
+  socket.on("set nick", (nick) => {
+    console.log("set nick: " + nick);
+    playerNames.set(socket.id, nick);
+    players.forEach((player) =>
+      player.emit("player connected", socket.id, nick)
+    );
+  });
+
+  socket.on("get players", () => {
+    console.log("get players");
+    socket.emit(
+      "player list",
+      [...players.keys()]
+        .map((playerId) => {
+          const name = playerNames.get(playerId);
+          if (!name) return null;
+          return { id: playerId, name };
+        })
+        .filter((p) => p)
+    );
+  });
 
   socket.on("join game", (roomId) => {
     if (!rooms.has(roomId)) {
@@ -60,9 +85,15 @@ io.on("connection", (socket) => {
   });
 
   socket.on("list rooms", () => {
-    for (let roomId of rooms.keys()) {
-      sendRoom(socket, roomId);
-    }
+    socket.emit(
+      "room list",
+      [...rooms.entries()]
+        .map(([roomId, room]) => {
+          if (room.players.length >= 2) return null;
+          return { id: roomId, name: room.name };
+        })
+        .filter((r) => r)
+    );
   });
 
   socket.on("disconnect", () => {
@@ -75,8 +106,12 @@ io.on("connection", (socket) => {
         .forEach((p) => p.emit("game won"));
       console.log(`deleting room ${playerRoom.name} ${playerPosition}`);
       rooms.delete(playerPosition);
+      players.forEach((player) => player.emit("room deleted", playerPosition));
     }
     playerPositions.delete(socket.id);
+    playerNames.delete(socket.id);
+    players.delete(socket.id);
+    players.forEach((player) => player.emit("player left", socket.id));
   });
 
   socket.on("tryMove", (data) => {

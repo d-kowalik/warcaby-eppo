@@ -4,9 +4,8 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import io from "socket.io-client";
 
 import { Loader } from "./Loader/Loader";
-import { Login } from "./Login/Login";
 import { Game } from "./Game/Game";
-import { Rooms } from "./Rooms/Rooms";
+import { HomePage } from "./HomePage/HomePage";
 import { ErrorPopup } from "./ErrorPopup/ErrorPopup";
 import { SocketContext } from "./SocketContext";
 
@@ -20,7 +19,7 @@ const App = () => {
   useEffect(() => {
     const socket = io();
     socket.on("connect", () => {
-      console.log(socket.id);
+      console.info(`Our ID: ${socket.id}`);
       setSocket(socket);
     });
 
@@ -41,7 +40,7 @@ const App = () => {
             <Game />
           </Route>
           <Route path="/">
-            {nick ? <Rooms nick={nick} /> : <Login onSubmit={setNick} />}
+            <HomePage nick={nick} setNick={setNick} />
           </Route>
         </Switch>
       </Router>
