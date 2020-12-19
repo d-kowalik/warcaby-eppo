@@ -1,20 +1,26 @@
 .game {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   padding: 75px;
   height: 100vh;
 }
 
 .game > * {
-  width: calc(100vmin - 120px);
+  width: min(95vw, calc(100vh - 120px));
   max-width: 600px;
+}
+
+.game button {
+  max-width: 150px;
+  font-size: 1.4em;
+  margin: 15px 0;
 }
 
 .game p {
   color: white;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 1.4em;
   margin: 15px 0;
 }

@@ -31,6 +31,10 @@ export const Game = () => {
     };
   }, [socket]);
 
+  const giveUp = () => {
+    history.push("/");
+  };
+
   useEffect(() => {
     socket.on("game ready", ({ color, enemyName }) => {
       setGame(new GameLogic(color));
@@ -49,16 +53,19 @@ export const Game = () => {
 
   if (!game) return <Loader text="Waiting for other players..." />;
 
+  const turn =
+    game.getCurrentPlayer() == game.getOurColor()
+      ? "Your turn"
+      : "Enemy's turn";
+
   return (
     <GameContext.Provider value={game}>
       <SetGameContext.Provider value={setGame}>
         <div className="game">
-          <p>Enemy: {enemyName}</p>
+          <button onClick={giveUp}>Give up</button>
           <Board />
           <p>
-            {game.getCurrentPlayer() == game.getOurColor()
-              ? "Your turn"
-              : "Enemy's turn"}
+            Enemy: {enemyName} / {turn}
           </p>
         </div>
       </SetGameContext.Provider>
