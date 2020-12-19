@@ -7,6 +7,7 @@ import { Loader } from "./Loader/Loader";
 import { Login } from "./Login/Login";
 import { Game } from "./Game/Game";
 import { Rooms } from "./Rooms/Rooms";
+import { ErrorPopup } from "./ErrorPopup/ErrorPopup";
 import { SocketContext } from "./SocketContext";
 
 import "./index.css";
@@ -33,6 +34,7 @@ const App = () => {
 
   return (
     <SocketContext.Provider value={socket}>
+      <ErrorPopup />
       <Router>
         <Switch>
           <Route path="/play">

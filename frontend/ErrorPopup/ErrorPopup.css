@@ -1,0 +1,14 @@
+.error-popup {
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  padding: 10px;
+  width: 80vw;
+  max-width: 500px;
+  min-height: 200px;
+  border-radius: 10px;
+  background-color: pink;
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+  font-size: 1.5em;
+  overflow: auto;
+}
