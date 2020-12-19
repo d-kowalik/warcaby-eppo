@@ -32,8 +32,6 @@ io.on("connection", (socket) => {
       return;
     }
 
-    playerPositions.set(socket.id, roomId);
-
     const room = rooms.get(roomId);
 
     if (room.players.length == 2) {
@@ -41,6 +39,7 @@ io.on("connection", (socket) => {
       return;
     }
 
+    playerPositions.set(socket.id, roomId);
     room.players.push(socket);
     if (room.players.length == 2) {
       room.players[0].emit("color", "PLAYER_1");
