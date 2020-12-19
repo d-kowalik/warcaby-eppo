@@ -22,6 +22,10 @@ export const Rooms = ({ nick }) => {
       setRooms(rooms.filter((room) => room.id != id));
     });
 
+    socket.on("room deleted", (id) => {
+      setRooms(rooms.filter((room) => room.id != id));
+    });
+
     socket.on("room list", (rooms) => {
       setRooms(rooms);
     });
@@ -29,6 +33,7 @@ export const Rooms = ({ nick }) => {
     return () => {
       socket.removeAllListeners("room available");
       socket.removeAllListeners("room full");
+      socket.removeAllListeners("room deleted");
       socket.removeAllListeners("room list");
     };
   }, [socket, rooms, setRooms]);
