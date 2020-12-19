@@ -69,9 +69,15 @@ io.on("connection", (socket) => {
     playerPositions.set(socket.id, roomId);
     room.players.push(socket);
     if (room.players.length == 2) {
-      room.players[0].emit("color", "PLAYER_1");
-      room.players[1].emit("color", "PLAYER_2");
-      io.emit("room full", roomId);
+      room.players[0].emit("game ready", {
+        color: "PLAYER_1",
+        enemyName: playerNames.get(room.players[1].id),
+      });
+      room.players[1].emit("game ready", {
+        color: "PLAYER_2",
+        enemyName: playerNames.get(room.players[0].id),
+      });
+      players.forEach((player) => player.emit("room full", roomId));
     }
   });
 

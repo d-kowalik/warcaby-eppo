@@ -15,6 +15,7 @@ export const Game = () => {
   const location = useLocation();
   const history = useHistory();
   const [game, setGame] = useState(null);
+  const [enemyName, setEnemyName] = useState("loading...");
 
   if (!location.state || !location.state.id) {
     history.push("/");
@@ -23,6 +24,7 @@ export const Game = () => {
 
   useEffect(() => {
     socket.emit("join game", location.state.id);
+
     return () => {
       socket.disconnect();
       socket.connect();
@@ -30,9 +32,9 @@ export const Game = () => {
   }, [socket]);
 
   useEffect(() => {
-    if (!socket) return;
-    socket.on("color", (color) => {
+    socket.on("game ready", ({ color, enemyName }) => {
       setGame(new GameLogic(color));
+      setEnemyName(enemyName);
     });
 
     socket.on("tryMove", (data) => {
@@ -43,7 +45,7 @@ export const Game = () => {
       socket.removeAllListeners("color");
       socket.removeAllListeners("tryMove");
     };
-  }, [socket, game, setGame]);
+  }, [socket, game, setGame, setEnemyName]);
 
   if (!game) return <Loader text="Waiting for other players..." />;
 
@@ -51,7 +53,13 @@ export const Game = () => {
     <GameContext.Provider value={game}>
       <SetGameContext.Provider value={setGame}>
         <div className="game">
+          <p>Enemy: {enemyName}</p>
           <Board />
+          <p>
+            {game.getCurrentPlayer() == game.getOurColor()
+              ? "Your turn"
+              : "Enemy's turn"}
+          </p>
         </div>
       </SetGameContext.Provider>
     </GameContext.Provider>
