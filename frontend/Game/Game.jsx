@@ -10,7 +10,7 @@ import { Loader } from "../Loader/Loader";
 
 import "./Game.css";
 
-export const Game = () => {
+export const Game = ({ nick }) => {
   const socket = useContext(SocketContext);
   const location = useLocation();
   const history = useHistory();
@@ -28,6 +28,7 @@ export const Game = () => {
     return () => {
       socket.disconnect();
       socket.connect();
+      socket.emit("set nick", nick);
     };
   }, [socket]);
 

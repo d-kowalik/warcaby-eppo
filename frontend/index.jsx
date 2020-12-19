@@ -37,7 +37,7 @@ const App = () => {
       <Router>
         <Switch>
           <Route path="/play">
-            <Game />
+            <Game nick={nick} />
           </Route>
           <Route path="/">
             <HomePage nick={nick} setNick={setNick} />
