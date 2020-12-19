@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 
-import { GameLogic } from "../../common/GameLogic";
+import { GameLogic, NO_WIN_YET } from "../../common/GameLogic";
 import { GameContext } from "./GameContext";
 import { SetGameContext } from "./SetGameContext";
 import { SocketContext } from "../SocketContext";
@@ -42,12 +42,30 @@ export const Game = () => {
     });
 
     socket.on("tryMove", (data) => {
-      setGame(game.tryMove(...data.map((x) => 7 - x)));
+      const newGame = game.tryMove(...data.map((x) => 7 - x));
+      setGame(newGame);
+      const winner = newGame.checkWinCondition();
+      if (winner != NO_WIN_YET) {
+        socket.emit("game won", winner);
+      }
+    });
+
+    socket.on("game won", (winner) => {
+      if (winner == game.getOurColor()) {
+        alert("You won!");
+      } else if (winner == game.getEnemyPlayer()) {
+        alert("You lost :(");
+      } else {
+        alert("Tie!");
+      }
+
+      history.push("/");
     });
 
     return () => {
-      socket.removeAllListeners("color");
+      socket.removeAllListeners("game ready");
       socket.removeAllListeners("tryMove");
+      socket.removeAllListeners("game won");
     };
   }, [socket, game, setGame, setEnemyName]);
 

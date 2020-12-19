@@ -98,10 +98,12 @@ io.on("connection", (socket) => {
     const playerPosition = playerPositions.get(socket.id);
     const playerRoom = rooms.get(playerPosition);
     if (playerRoom) {
-      playerRoom.players
-        .filter((p) => p.id != socket.id)
-        .forEach((p) => p.emit("game won"));
-      console.log(`deleting room ${playerRoom.name} ${playerPosition}`);
+      if (playerRoom.players[0] && playerRoom.players[0].id != socket.id) {
+        playerRoom.players[0].emit("game won", "PLAYER_1");
+      }
+      if (playerRoom.players[1] && playerRoom.players[1].id != socket.id) {
+        playerRoom.players[1].emit("game won", "PLAYER_2");
+      }
       rooms.delete(playerPosition);
       players.forEach((player) => player.emit("room deleted", playerPosition));
     }
@@ -109,6 +111,17 @@ io.on("connection", (socket) => {
     playerNames.delete(socket.id);
     players.delete(socket.id);
     players.forEach((player) => player.emit("player left", socket.id));
+  });
+
+  socket.on("game won", (winner) => {
+    console.log("game won: ${winner}");
+    const playerPosition = playerPositions.get(socket.id);
+    const playerRoom = rooms.get(playerPosition);
+    if (playerRoom) {
+      playerRoom.players.forEach((p) => p.emit("game won", winner));
+    }
+    rooms.delete(playerPosition);
+    playerPositions.delete(socket.id);
   });
 
   socket.on("tryMove", (data) => {

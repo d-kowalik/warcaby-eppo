@@ -2,6 +2,8 @@ export const INVALID = "INVALID";
 export const EMPTY = "EMPTY";
 export const PLAYER_1 = "PLAYER_1"; // Blacks.
 export const PLAYER_2 = "PLAYER_2"; // Whites.
+export const TIE = "TIE";
+export const NO_WIN_YET = "NO_WIN_YET";
 
 const invert = (color) => {
   return color == PLAYER_1 ? PLAYER_2 : PLAYER_1;
@@ -53,26 +55,26 @@ export class GameLogic {
     return invert(this.getCurrentPlayer());
   }
 
-  getPossibleKills(x, y, killsSoFar) {
+  getPossibleKillsFor(x, y, killsSoFar, player) {
     if (x < 0 || y < 0 || x >= 8 || y >= 8) return [];
 
     let possibleKills = [];
 
-    const direction = this.getCurrentPlayer() == this.getOurColor() ? -1 : 1;
+    const direction = player == this.getOurColor() ? -1 : 1;
     let indices = [
       [1, direction],
       [-1, direction],
     ];
 
     for (let [dx, dy] of indices) {
-      if (this.getField(x + dx, y + dy) == this.getEnemyPlayer()) {
+      if (this.getField(x + dx, y + dy) == invert(player)) {
         if (this.getField(x + dx * 2, y + dy * 2) == EMPTY) {
           const kills = [...killsSoFar, [x + dx, y + dy]];
 
           possibleKills.push([x + dx * 2, y + dy * 2, kills]);
 
           possibleKills = possibleKills.concat(
-            this.getPossibleKills(x + dx * 2, y + dy * 2, kills)
+            this.getPossibleKillsFor(x + dx * 2, y + dy * 2, kills, player)
           );
         }
       }
@@ -81,16 +83,20 @@ export class GameLogic {
     return possibleKills;
   }
 
-  getPossibleMoves(x, y) {
-    let possibleMoves = this.getPossibleKills(x, y, []);
+  getPossibleMovesFor(x, y, player) {
+    let possibleMoves = this.getPossibleKillsFor(x, y, [], player);
 
-    const direction = this.getCurrentPlayer() == this.getOurColor() ? -1 : 1;
+    const direction = player == this.getOurColor() ? -1 : 1;
     if (this.getField(x + 1, y + direction) == EMPTY)
       possibleMoves.push([x + 1, y + direction, []]);
     if (this.getField(x - 1, y + direction) == EMPTY)
       possibleMoves.push([x - 1, y + direction, []]);
 
     return possibleMoves.filter(([mx, my]) => !(mx == x && my == y));
+  }
+
+  getPossibleMoves(x, y) {
+    return this.getPossibleMovesFor(x, y, this.getCurrentPlayer());
   }
 
   tryMove(xFrom, yFrom, xTo, yTo) {
@@ -117,5 +123,45 @@ export class GameLogic {
     }
 
     return this;
+  }
+
+  getCheckersPositionsFor(color) {
+    const res = [];
+    for (let x = 0; x < 8; x++) {
+      for (let y = 0; y < 8; y++) {
+        if (this.fields[x][y] === color) {
+          res.push([x, y]);
+        }
+      }
+    }
+    return res;
+  }
+
+  checkWinCondition() {
+    const ourColor = this.getOurColor();
+    const enemyColor = invert(ourColor);
+
+    const ourCheckers = this.getCheckersPositionsFor(ourColor);
+    const enemyCheckers = this.getCheckersPositionsFor(enemyColor);
+
+    console.log("our", ourCheckers);
+    console.log("ene", enemyCheckers);
+
+    const ourLoss = !ourCheckers.some(
+      ([x, y]) => this.getPossibleMovesFor(x, y, ourColor).length > 0
+    );
+
+    const enemyLoss = !enemyCheckers.some(
+      ([x, y]) => this.getPossibleMovesFor(x, y, enemyColor).length > 0
+    );
+
+    if (ourLoss && enemyLoss) {
+      return TIE;
+    } else if (ourLoss) {
+      return enemyColor;
+    } else if (enemyLoss) {
+      return ourColor;
+    }
+    return NO_WIN_YET;
   }
 }
