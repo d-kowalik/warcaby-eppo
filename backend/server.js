@@ -15,7 +15,9 @@ const playerPositions = new Map();
 const sendRoom = (socket, roomId) => {
   const room = rooms.get(roomId);
   if (!room) return;
-  socket.emit("room discovery", roomId, room.name);
+  if (room.players.length < 2) {
+    socket.emit("room discovery", roomId, room.name);
+  }
 };
 
 io.on("connection", (socket) => {
@@ -67,7 +69,9 @@ io.on("connection", (socket) => {
     const playerPosition = playerPositions.get(socket.id);
     const playerRoom = rooms.get(playerPosition);
     if (playerRoom) {
-      playerRoom.players.forEach((p) => p.emit("game won"));
+      playerRoom.players
+        .filter((p) => p.id != socket.id)
+        .forEach((p) => p.emit("game won"));
       console.log(`deleting room ${playerRoom.name} ${playerPosition}`);
       rooms.delete(playerPosition);
     }
