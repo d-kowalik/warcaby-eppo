@@ -16,7 +16,7 @@ const sendRoom = (socket, roomId) => {
   const room = rooms.get(roomId);
   if (!room) return;
   if (room.players.length < 2) {
-    socket.emit("room discovery", roomId, room.name);
+    socket.emit("room available", roomId, room.name);
   }
 };
 
@@ -46,6 +46,7 @@ io.on("connection", (socket) => {
     if (room.players.length == 2) {
       room.players[0].emit("color", "PLAYER_1");
       room.players[1].emit("color", "PLAYER_2");
+      io.emit("room full", roomId);
     }
   });
 

@@ -14,13 +14,18 @@ export const Rooms = ({ nick }) => {
   }, []);
 
   useEffect(() => {
-    socket.on("room discovery", (id, name) => {
+    socket.on("room available", (id, name) => {
       console.log("room created!");
       setRooms([...rooms, { id, name }]);
     });
 
+    socket.on("room full", (id) => {
+      setRooms(rooms.filter((room) => room.id != id));
+    });
+
     return () => {
-      socket.removeAllListeners("room discovery");
+      socket.removeAllListeners("room available");
+      socket.removeAllListeners("room full");
     };
   }, [socket, rooms, setRooms]);
 
