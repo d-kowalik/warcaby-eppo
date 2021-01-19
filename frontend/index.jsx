@@ -23,6 +23,10 @@ const App = () => {
       setSocket(socket);
     });
 
+    socket.on("disconnect", () => {
+      setSocket(null);
+    });
+
     return () => {
       setSocket(null);
       socket.disconnect();
