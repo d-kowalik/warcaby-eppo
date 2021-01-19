@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import "./Login.css";
+import { Button } from "../Button/Button";
 
 export const Login = ({ onSubmit }) => {
   const [nick, setNick] = useState("");
@@ -18,8 +19,9 @@ export const Login = ({ onSubmit }) => {
         <input
           placeholder="Enter nickname"
           onChange={(e) => setNick(e.target.value)}
+          required
         />
-        <button type="submit">Go</button>
+        <Button text="Go" color="#e91e63" width="60%" />
       </form>
     </div>
   );

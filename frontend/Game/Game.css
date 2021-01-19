@@ -13,10 +13,7 @@
 }
 
 .game button {
-  max-width: 150px;
-  min-height: 40px;
   font-size: 1.4em;
-  margin: 15px 0;
 }
 
 .game p {

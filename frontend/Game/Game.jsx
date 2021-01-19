@@ -9,6 +9,7 @@ import { Board } from "./Board";
 import { Loader } from "../Loader/Loader";
 
 import "./Game.css";
+import { Button } from "../Button/Button";
 
 export const Game = ({ nick }) => {
   const socket = useContext(SocketContext);
@@ -81,7 +82,12 @@ export const Game = ({ nick }) => {
     <GameContext.Provider value={game}>
       <SetGameContext.Provider value={setGame}>
         <div className="game">
-          <button onClick={giveUp}>Give up</button>
+          <Button
+            text="Give up"
+            color="#494949"
+            width="100%"
+            onClick={giveUp}
+          />
           <Board />
           <p>
             Enemy: {enemyName} / {turn}

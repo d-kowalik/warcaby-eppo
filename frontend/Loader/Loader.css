@@ -22,7 +22,8 @@
   color: #ffffff;
 }
 
-.loader-back {
+.loader-parent button {
+  min-width: 120px;
   margin: 15px;
 }
 

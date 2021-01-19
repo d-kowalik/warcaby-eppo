@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 
 import "./Loader.css";
+import { Button } from "../Button/Button";
 
 export const Loader = ({ text, backButton }) => {
   const history = useHistory();
@@ -11,9 +12,11 @@ export const Loader = ({ text, backButton }) => {
       {text ? <p className="loader-text">{text}</p> : null}
       <div className="loader" />
       {backButton ? (
-        <button className="loader-back" onClick={() => history.goBack()}>
-          Go back
-        </button>
+        <Button
+          text="Go back"
+          color="#e91e63"
+          onClick={() => history.goBack()}
+        />
       ) : null}
     </div>
   );

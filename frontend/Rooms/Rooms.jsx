@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import "./Rooms.css";
 import { SocketContext } from "../SocketContext";
+import { Button } from "../Button/Button";
 
 export const Rooms = ({ nick }) => {
   const socket = useContext(SocketContext);
@@ -52,15 +53,16 @@ export const Rooms = ({ nick }) => {
 
   return (
     <div className="rooms">
-      <button className="create-room-button" onClick={createRoom}>
-        Create room
-      </button>
+      <Button text="Create room" onClick={createRoom} color="#e91e63" />
       <h1>Existing rooms</h1>
       {rooms.map(({ id, name }) => {
         return (
-          <button className="room" key={id} onClick={() => joinRoom(id)}>
-            {name}
-          </button>
+          <Button
+            key={id}
+            text={name}
+            onClick={() => joinRoom(id)}
+            color="#39796b"
+          />
         );
       })}
     </div>
