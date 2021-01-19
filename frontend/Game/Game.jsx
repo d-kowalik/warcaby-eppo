@@ -70,7 +70,7 @@ export const Game = ({ nick }) => {
     };
   }, [socket, game, setGame, setEnemyName]);
 
-  if (!game) return <Loader text="Waiting for other players..." />;
+  if (!game) return <Loader text="Waiting for other players..." backButton />;
 
   const turn =
     game.getCurrentPlayer() == game.getOurColor()
