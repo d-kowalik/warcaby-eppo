@@ -144,19 +144,21 @@ export class GameLogic {
     const ourCheckers = this.getCheckersPositionsFor(ourColor);
     const enemyCheckers = this.getCheckersPositionsFor(enemyColor);
 
-    const ourLoss = !ourCheckers.some(
+    if (ourCheckers.length === 0) return enemyColor;
+    if (enemyCheckers.length === 0) return ourColor;
+
+    const ourOutOfMoves = !ourCheckers.some(
       ([x, y]) => this.getPossibleMovesFor(x, y, ourColor).length > 0
     );
-
-    const enemyLoss = !enemyCheckers.some(
+    const enemyOutOfMoves = !enemyCheckers.some(
       ([x, y]) => this.getPossibleMovesFor(x, y, enemyColor).length > 0
     );
 
-    if (ourLoss && enemyLoss) {
+    if (ourOutOfMoves && enemyOutOfMoves) {
       return TIE;
-    } else if (ourLoss) {
+    } else if (ourOutOfMoves) {
       return enemyColor;
-    } else if (enemyLoss) {
+    } else if (enemyOutOfMoves) {
       return ourColor;
     }
     return NO_WIN_YET;
