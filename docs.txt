@@ -1,0 +1,23 @@
+WEPPO Lista 7 (projekt)
+
+Temat 2: gra multiplayer (warcaby).
+
+Autorzy:
+- Paweł Zmarzły 314569
+- Damian Kowalik 315984
+
+Link: https://warcaby-eppo.herokuapp.com
+
+Krótki opis:
+Użytkownik może wybrać nick, po czym dołącza do lobby.
+Tam może zobaczyć listę użytkowników online, wejść do pokoju, gdzie ktoś czeka
+na grę, lub utworzyć własny pokój.
+Gdy w pokoju znajdą się dwaj gracze, pokój zostaje zamknięty, i rozpoczyna
+się gra. Serwer przydziela graczom kolory. Każdy gracz widzi planszę w takim
+odbiciu, aby swoje pionki widzieć na dole.
+Można zbijać wielokrotnie, ale nie można zbijać do tyłu. Dojście do końca
+planszy nie powoduje zamiany pionka w królową - stąd ważnym elementem taktyki
+jest optymalizacja liczby ruchów.
+
+Główne przypadki użycia:
+Znudzeni znajomi chcą pograć w warcaby.
